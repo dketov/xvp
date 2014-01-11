@@ -46,6 +46,11 @@ div#reloads {
 	font-style: italic;
 }
 
+div#selector {
+	text-align: center;
+	font-size: 12px;
+}
+
 h1 {
 	font-size: 20px;
 	text-align: center;

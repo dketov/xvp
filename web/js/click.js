@@ -122,8 +122,12 @@ function vmClick(action, fullname)
     if (progress)
 	setBusy(fullname, say, false);
 
+    var langChecked = $('#selector input:checked').get(0).value;
+    form.langChecked.value = langChecked;
+    
     form.setAttribute("action", page + ".php");
     form.setAttribute("target", target);
+    
     $('input', form).filter('.action').attr('value', action);
     form.submit();
 

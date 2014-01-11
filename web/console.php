@@ -68,6 +68,7 @@ function main()
     // Using REQUEST not POST, for easier integration with custom web pages
     $poolname = stripslashes($_REQUEST['poolname']);
     $vmname = stripslashes($_REQUEST['vmname']);
+    $langChecked = stripslashes($_REQUEST['langChecked']);
 
     xvp_global_init();
     xvp_config_init();
@@ -127,42 +128,48 @@ function main()
 	$xvptarget = xvp_xmlescape($poolname . ":" . $vmname);
     }
 
-    echo <<<EOF1
-<applet code="VncViewer.class" archive="VncViewer.jar">
-  <param name="port" value="$port" />
-  <param name="open new window" value="yes" />
-  <param name="offer relogin" value="no" />
-  <param name="user" value="$user" />
-  <param name="vm" value="$xvptarget" />
-  <param name="xvppassword" value="$password" />
-  <param name="xvpshutdown" value="$shutdown" />
-  <param name="xvpreboot" value="$reboot" />
-  <param name="xvpreset" value="$reset" />
-  <param name="read only" value="$readonly" />
-  <param name="show controls" value="$controls" />
-EOF1;
-
     if ($xvp_otp_ipcheck == XVP_IPCHECK_HTTP) {
-	$proxyhost = $_SERVER['SERVER_NAME'];
-	$proxyport = $_SERVER['SERVER_PORT'];
-	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
-	    $factory = "HTTPSConnectSocketFactory";
-	} else {
-	    $factory = "HTTPConnectSocketFactory";
+        $proxyhost = $_SERVER['SERVER_NAME'];
+        $proxyport = $_SERVER['SERVER_PORT'];
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") {
+            $factory = "HTTPSConnectSocketFactory";
+            $jsproto = "https://";
+        } else {
+            $factory = "HTTPConnectSocketFactory";
+            $jsproto = "http://";
 	}
-  
-	echo <<<EOF2
-
-  <param name="proxyhost1" value="$proxyhost" />
-  <param name="proxyport1" value="$proxyport" />
-  <param name="socketfactory" value="$factory" />
-EOF2;
     }
 
-    echo <<<EOF3
-
-</applet>
-
-EOF3;
+    if ($langChecked == 'js'){
+	echo <<<EOF
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" charset="utf-8">
+            jQuery.noConflict();
+            jQuery(document).ready(function(){
+            var newW = window.open("$jsproto$proxyhost/web/noVNC/xvp.html?host=xvp.actimind.com&port=$proxyport&user=$user&target=$xvptarget&password=$password", "_newtab");
+	    });
+        </script>
+EOF;
+    }
+    else {
+	echo <<<EOF
+	<applet code="VncViewer.class" archive="VncViewer.jar">
+	    <param name="port" value="$port" />
+	    <param name="open new window" value="yes" />
+    	    <param name="offer relogin" value="no" />
+	    <param name="user" value="$user" />
+    	    <param name="vm" value="$xvptarget" />
+	    <param name="xvppassword" value="$password" />
+	    <param name="xvpshutdown" value="$shutdown" />
+	    <param name="xvpreboot" value="$reboot" />
+	    <param name="xvpreset" value="$reset" />
+	    <param name="read only" value="$readonly" />
+	    <param name="show controls" value="$controls" />
+	    <param name="proxyhost1" value="$proxyhost" />
+	    <param name="proxyport1" value="$proxyport" />
+	    <param name="socketfactory" value="$factory" />
+	</applet>
+EOF;
+    }
 }
 ?>

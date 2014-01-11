@@ -63,6 +63,10 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 <div id="timestamp">Update pending</div>
 <div id="reloads">updates automatically - do not use refresh button</div>
 
+<div id="selector">
+    <input type="radio" name="cons" value="java" checked /> Java 
+    <input type="radio" name="cons" value="js" /> Js <br />
+</div>
 <?php
 
 main();
@@ -254,6 +258,7 @@ EOF;
   <tr class="group-$groupclass">
     <td class="vm">
       <form class="vm" id="$form" method="post" action="blank.html" target="_blank">
+        <input type="hidden" name="langChecked" value="" />
         <input type="hidden" name="poolname" value="$poolname" />
         <input type="hidden" name="vmname" value="$vmname" />
         <input type="hidden" name="action" class="action" value="" />
