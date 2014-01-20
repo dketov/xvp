@@ -1,0 +1,9 @@
+You should install apache > 2.4.4 with mod_wstunnel and add location:
+
+<Location /websockify>
+    ProxyPass ws://localhost:6080/
+    ProxyPass wss://localhost:6080/
+    Allow from all
+</Location>
+
+Also you should run noVNC/utils/launch.sh
